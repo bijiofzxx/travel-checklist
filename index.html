@@ -194,6 +194,19 @@
             cursor: pointer;
         }
 
+        .group-actions {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .btn-text {
+            font-size: 0.75rem;
+            color: var(--primary);
+            text-decoration: underline;
+            cursor: pointer;
+        }
+
         .items-container {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -294,13 +307,11 @@
 
 <div class="container">
     
-    <!-- 一、核心安全提示 -->
     <div class="module">
         <div class="module-header">
             <div class="module-title">一、核心安全提示 (30条)</div>
         </div>
         <div class="module-content">
-            <!-- 人员安全 -->
             <div class="safety-category">
                 <div class="sub-category-header" onclick="toggleSafetyCategory(this)">
                     <span>人员安全 <span class="category-summary">(不独自行动，夜晚不单独外出。)</span></span>
@@ -316,7 +327,6 @@
                 </ul>
             </div>
 
-            <!-- 财物与信息 -->
             <div class="safety-category">
                 <div class="sub-category-header" onclick="toggleSafetyCategory(this)">
                     <span>财物与信息 <span class="category-summary">(建议删除虚拟货币钱包、理财类App。)</span></span>
@@ -330,7 +340,6 @@
                 </ul>
             </div>
 
-            <!-- 健康与饮食 -->
             <div class="safety-category">
                 <div class="sub-category-header" onclick="toggleSafetyCategory(this)">
                     <span>健康与饮食 <span class="category-summary">(不吃生腌等生食，海鲜务必煮熟。)</span></span>
@@ -344,7 +353,6 @@
                 </ul>
             </div>
 
-            <!-- 交通与法规 -->
             <div class="safety-category">
                 <div class="sub-category-header" onclick="toggleSafetyCategory(this)">
                     <span>交通与法规 <span class="category-summary">(泰国车辆左侧行驶，过马路看右看左。)</span></span>
@@ -358,7 +366,6 @@
                 </ul>
             </div>
 
-            <!-- 水上活动 -->
             <div class="safety-category">
                 <div class="sub-category-header" onclick="toggleSafetyCategory(this)">
                     <span>水上活动 <span class="category-summary">(关注海滩红旗警告，挂红旗时严禁下海。)</span></span>
@@ -370,7 +377,6 @@
                 </ul>
             </div>
 
-            <!-- 其他事项 -->
             <div class="safety-category">
                 <div class="sub-category-header" onclick="toggleSafetyCategory(this)">
                     <span>其他事项 <span class="category-summary">(准备足额泰铢现金以备入境抽查。)</span></span>
@@ -392,7 +398,6 @@
         </div>
     </div>
 
-    <!-- 二、紧急联系电话 -->
     <div class="module">
         <div class="module-header"><div class="module-title">二、紧急联系电话</div></div>
         <div class="module-content">
@@ -409,13 +414,17 @@
         </div>
     </div>
 
-    <!-- 三、物品清单 (必备项) -->
     <div class="module" id="essential-module">
         <div class="module-header"><div class="module-title">三、物品清单 (必备项)</div></div>
         <div class="module-content">
             <div class="checklist-group">
-                <div class="group-header" onclick="toggleGroup(this)">
-                    <span>证件与财务</span><span class="arrow">▼</span>
+                <div class="group-header" onclick="handleGroupClick(event, this)">
+                    <span>证件与财务</span>
+                    <div class="group-actions">
+                        <span class="btn-text" onclick="selectGroup(event, this, true)">全选</span>
+                        <span class="btn-text" onclick="selectGroup(event, this, false)">取消</span>
+                        <span class="arrow">▼</span>
+                    </div>
                 </div>
                 <div class="items-container">
                     <label class="item-box essential">身份证 <input type="checkbox"></label>
@@ -431,8 +440,13 @@
             </div>
 
             <div class="checklist-group">
-                <div class="group-header" onclick="toggleGroup(this)">
-                    <span>服饰</span><span class="arrow">▼</span>
+                <div class="group-header" onclick="handleGroupClick(event, this)">
+                    <span>服饰</span>
+                    <div class="group-actions">
+                        <span class="btn-text" onclick="selectGroup(event, this, true)">全选</span>
+                        <span class="btn-text" onclick="selectGroup(event, this, false)">取消</span>
+                        <span class="arrow">▼</span>
+                    </div>
                 </div>
                 <div class="items-container">
                     <label class="item-box essential">短袖*4 <input type="checkbox"></label>
@@ -450,8 +464,13 @@
             </div>
 
             <div class="checklist-group">
-                <div class="group-header" onclick="toggleGroup(this)">
-                    <span>电子设备</span><span class="arrow">▼</span>
+                <div class="group-header" onclick="handleGroupClick(event, this)">
+                    <span>电子设备</span>
+                    <div class="group-actions">
+                        <span class="btn-text" onclick="selectGroup(event, this, true)">全选</span>
+                        <span class="btn-text" onclick="selectGroup(event, this, false)">取消</span>
+                        <span class="arrow">▼</span>
+                    </div>
                 </div>
                 <div class="items-container">
                     <label class="item-box essential">定位器/电子手表 <input type="checkbox"></label>
@@ -465,8 +484,13 @@
                 </div>
             </div>
             <div class="checklist-group">
-                <div class="group-header" onclick="toggleGroup(this)">
-                    <span>日用</span><span class="arrow">▼</span>
+                <div class="group-header" onclick="handleGroupClick(event, this)">
+                    <span>日用</span>
+                    <div class="group-actions">
+                        <span class="btn-text" onclick="selectGroup(event, this, true)">全选</span>
+                        <span class="btn-text" onclick="selectGroup(event, this, false)">取消</span>
+                        <span class="arrow">▼</span>
+                    </div>
                 </div>
                 <div class="items-container">
                     <label class="item-box essential">牙线 <input type="checkbox"></label>
@@ -480,8 +504,13 @@
                 </div>
             </div>
             <div class="checklist-group">
-                <div class="group-header" onclick="toggleGroup(this)">
-                    <span>水上用品</span><span class="arrow">▼</span>
+                <div class="group-header" onclick="handleGroupClick(event, this)">
+                    <span>水上用品</span>
+                    <div class="group-actions">
+                        <span class="btn-text" onclick="selectGroup(event, this, true)">全选</span>
+                        <span class="btn-text" onclick="selectGroup(event, this, false)">取消</span>
+                        <span class="arrow">▼</span>
+                    </div>
                 </div>
                 <div class="items-container">
                     <label class="item-box essential">泳衣裤 <input type="checkbox"></label>
@@ -490,8 +519,13 @@
                 </div>
             </div>
             <div class="checklist-group">
-                <div class="group-header" onclick="toggleGroup(this)">
-                    <span>常备药品</span><span class="arrow">▼</span>
+                <div class="group-header" onclick="handleGroupClick(event, this)">
+                    <span>常备药品</span>
+                    <div class="group-actions">
+                        <span class="btn-text" onclick="selectGroup(event, this, true)">全选</span>
+                        <span class="btn-text" onclick="selectGroup(event, this, false)">取消</span>
+                        <span class="arrow">▼</span>
+                    </div>
                 </div>
                 <div class="items-container">
                     <label class="item-box essential">布洛芬 <input type="checkbox"></label>
@@ -504,8 +538,13 @@
                 </div>
             </div>
             <div class="checklist-group">
-                <div class="group-header" onclick="toggleGroup(this)">
-                    <span>APP</span><span class="arrow">▼</span>
+                <div class="group-header" onclick="handleGroupClick(event, this)">
+                    <span>APP</span>
+                    <div class="group-actions">
+                        <span class="btn-text" onclick="selectGroup(event, this, true)">全选</span>
+                        <span class="btn-text" onclick="selectGroup(event, this, false)">取消</span>
+                        <span class="arrow">▼</span>
+                    </div>
                 </div>
                 <div class="items-container">
                     <label class="item-box essential">谷歌翻译 <input type="checkbox"></label>
@@ -516,13 +555,17 @@
         </div>
     </div>
 
-    <!-- 四、物品清单 (可选项) -->
     <div class="module">
         <div class="module-header"><div class="module-title">四、物品清单 (可选项)</div></div>
         <div class="module-content">
             <div class="checklist-group">
-                <div class="group-header" onclick="toggleGroup(this)">
-                    <span>个人护理</span><span class="arrow">▼</span>
+                <div class="group-header" onclick="handleGroupClick(event, this)">
+                    <span>个人护理</span>
+                    <div class="group-actions">
+                        <span class="btn-text" onclick="selectGroup(event, this, true)">全选</span>
+                        <span class="btn-text" onclick="selectGroup(event, this, false)">取消</span>
+                        <span class="arrow">▼</span>
+                    </div>
                 </div>
                 <div class="items-container">
                     <label class="item-box">牙刷 <input type="checkbox"></label>
@@ -537,8 +580,13 @@
             </div>
 
             <div class="checklist-group">
-                <div class="group-header" onclick="toggleGroup(this)">
-                    <span>辅助</span><span class="arrow">▼</span>
+                <div class="group-header" onclick="handleGroupClick(event, this)">
+                    <span>辅助</span>
+                    <div class="group-actions">
+                        <span class="btn-text" onclick="selectGroup(event, this, true)">全选</span>
+                        <span class="btn-text" onclick="selectGroup(event, this, false)">取消</span>
+                        <span class="arrow">▼</span>
+                    </div>
                 </div>
                 <div class="items-container">
                     <label class="item-box">眼罩 <input type="checkbox"></label>
@@ -566,6 +614,15 @@
 </div>
 
 <script>
+    // 初始化：为所有checkbox增加点击监听，一旦勾选则取消警告红色标识
+    document.querySelectorAll('.item-box input').forEach(checkbox => {
+        checkbox.addEventListener('change', function() {
+            if (this.checked) {
+                this.parentElement.classList.remove('missing-essential');
+            }
+        });
+    });
+
     function toggleSafetyCategory(el, forceState) {
         const category = el.parentElement;
         const arrow = el.querySelector('.arrow');
@@ -579,6 +636,12 @@
             category.classList.toggle('collapsed');
             arrow.textContent = category.classList.contains('collapsed') ? '◀' : '▼';
         }
+    }
+
+    // 处理分组标题点击（排除内部按钮）
+    function handleGroupClick(event, el) {
+        if (event.target.classList.contains('btn-text')) return;
+        toggleGroup(el);
     }
 
     function toggleGroup(el, forceState) {
@@ -604,6 +667,20 @@
                 arrow.textContent = '◀';
             }
         }
+    }
+
+    // 类别全选/取消功能
+    function selectGroup(event, el, isAll) {
+        event.stopPropagation(); // 阻止触发折叠
+        const group = el.closest('.checklist-group');
+        const checkboxes = group.querySelectorAll('input[type="checkbox"]');
+        checkboxes.forEach(cb => {
+            cb.checked = isAll;
+            // 如果是选中，同时取消可能存在的红色警告
+            if (isAll) {
+                cb.parentElement.classList.remove('missing-essential');
+            }
+        });
     }
 
     function toggleAll(expand) {
