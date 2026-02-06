@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>泰国旅行安全与备忘手册</title>
+    <style>
+        :root {
+            --primary: #008080;
+            --secondary: #f4f7f6;
+            --accent: #e74c3c;
+            --text: #2c3e50;
+            --shadow: 0 4px 6px rgba(0,0,0,0.1);
+            --border-radius: 12px;
+        }
+
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--secondary);
+            color: var(--text);
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px 15px 120px 15px;
+        }
+
+        /* Header Area */
+        header {
+            background: linear-gradient(135deg, #008080, #20b2aa);
+            color: white;
+            padding: 30px 20px;
+            border-radius: 0 0 var(--border-radius) var(--border-radius);
+            text-align: center;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow);
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 1.5rem;
+        }
+
+        header p {
+            margin: 10px 0 0;
+            opacity: 0.9;
+            font-size: 0.9rem;
+        }
+
+        .important-note {
+            background: rgba(255,255,255,0.2);
+            padding: 5px 10px;
+            border-radius: 20px;
+            display: inline-block;
+            margin-top: 10px;
+            font-size: 0.8rem;
+        }
+
+        /* Section Modules */
+        .module {
+            background: white;
+            border-radius: var(--border-radius);
+            margin-bottom: 15px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            overflow: hidden;
+        }
+
+        .module-header {
+            padding: 15px;
+            background: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: bold;
+            border-bottom: 1px solid #f0f0f0;
+            cursor: pointer;
+        }
+
+        .module-content {
+            padding: 15px;
+        }
+
+        .module-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--primary);
+        }
+
+        /* Safety Category Styles */
+        .sub-category-header {
+            font-size: 0.85rem;
+            color: #7f8c8d;
+            margin: 15px 0 5px;
+            padding-bottom: 5px;
+            border-bottom: 2px solid var(--secondary);
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #fafafa;
+            padding: 8px;
+            border-radius: 6px;
+        }
+
+        .category-summary {
+            font-weight: bold;
+            color: var(--text);
+            margin-left: 5px;
+            display: none;
+        }
+
+        .collapsed .category-summary {
+            display: inline;
+        }
+
+        .collapsed .safety-list {
+            display: none;
+        }
+
+        .safety-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .safety-item {
+            padding: 10px 0;
+            border-bottom: 1px dashed #eee;
+            font-size: 0.9rem;
+        }
+
+        .safety-item:last-child {
+            border-bottom: none;
+        }
+
+        .highlight {
+            color: var(--accent);
+            font-weight: bold;
+        }
+
+        /* Emergency Phones */
+        .phone-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .phone-card {
+            background: #f8fbfb;
+            padding: 12px;
+            border-radius: 8px;
+            text-align: center;
+            border: 1px solid #e0eded;
+        }
+
+        .phone-card .label {
+            font-size: 0.75rem;
+            color: #666;
+            display: block;
+        }
+
+        .phone-card a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        /* Checklist Styles */
+        .checklist-group {
+            margin-bottom: 20px;
+        }
+
+        .group-header {
+            background: #f0f7f7;
+            padding: 8px 12px;
+            border-radius: 6px;
+            margin-bottom: 10px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .items-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+        }
+
+        .items-container.hidden {
+            display: none !important;
+        }
+
+        .item-box {
+            background: #fff;
+            border: 1px solid #eee;
+            border-radius: 6px;
+            padding: 8px 4px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            font-size: 0.8rem;
+            transition: all 0.3s;
+        }
+
+        .item-box input {
+            margin-bottom: 5px;
+            width: 18px;
+            height: 18px;
+        }
+
+        /* Fixed Action Bar */
+        .action-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            padding: 12px 10px;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            z-index: 100;
+            gap: 8px;
+        }
+
+        .btn {
+            border: none;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            padding: 10px 15px;
+            flex: 1;
+        }
+
+        .btn-secondary {
+            background-color: #eee;
+            color: #666;
+        }
+
+        .btn-alert {
+            background-color: var(--accent);
+            color: white;
+            box-shadow: 0 4px 10px rgba(231, 76, 60, 0.3);
+            flex: 1.5;
+        }
+
+        .btn:active {
+            transform: scale(0.95);
+        }
+
+        /* Missing alert style */
+        .missing-essential {
+            color: var(--accent) !important;
+            font-weight: bold;
+            border-color: var(--accent) !important;
+            background-color: #fff5f5 !important;
+        }
+
+        .arrow {
+            transition: transform 0.3s;
+            font-size: 0.7rem;
+        }
+
+        .collapsed .arrow {
+            transform: rotate(-90deg);
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>泰国旅行安全与备忘手册</h1>
+    <p>普吉岛·曼谷 | 4名成人 + 1名儿童</p>
+    <div class="important-note">※ 请每位成员逐一认真查看，安全第一 ※</div>
+</header>
+
+<div class="container">
+    
+    <!-- 一、核心安全提示 -->
+    <div class="module">
+        <div class="module-header">
+            <div class="module-title">一、核心安全提示 (30条)</div>
+        </div>
+        <div class="module-content">
+            <!-- 人员安全 -->
+            <div class="safety-category">
+                <div class="sub-category-header" onclick="toggleSafetyCategory(this)">
+                    <span>人员安全 <span class="category-summary">(不独自行动，夜晚不单独外出。)</span></span>
+                    <span class="arrow">▼</span>
+                </div>
+                <ul class="safety-list">
+                    <li class="safety-item">1. <span class="highlight">不独自行动</span>，夜晚不单独外出。</li>
+                    <li class="safety-item">2. 不去陌生人介绍、安排的活动。</li>
+                    <li class="safety-item">3. 在酒店时<span class="highlight">不给陌生人开门</span>。</li>
+                    <li class="safety-item">4. 不独自游泳，下水<span class="highlight">必须穿救生衣</span>。</li>
+                    <li class="safety-item">5. 小孩随时由至少一名成人看管，绝不能独自留在房间。</li>
+                    <li class="safety-item">6. <span class="highlight">严禁触摸</span>泰国小孩的头部 (文化禁忌)。</li>
+                </ul>
+            </div>
+
+            <!-- 财物与信息 -->
+            <div class="safety-category">
+                <div class="sub-category-header" onclick="toggleSafetyCategory(this)">
+                    <span>财物与信息 <span class="category-summary">(建议删除虚拟货币钱包、理财类App。)</span></span>
+                    <span class="arrow">▼</span>
+                </div>
+                <ul class="safety-list">
+                    <li class="safety-item">7. <span class="highlight">建议删除</span>虚拟货币钱包、基金、理财类App。</li>
+                    <li class="safety-item">8. <span class="highlight">严禁露财</span>，首饰、大额现金存保险箱。</li>
+                    <li class="safety-item">9. 护照重要证件纸质复印件及云端备份。</li>
+                    <li class="safety-item">10. 警惕主动搭讪的“好心人”。</li>
+                </ul>
+            </div>
+
+            <!-- 健康与饮食 -->
+            <div class="safety-category">
+                <div class="sub-category-header" onclick="toggleSafetyCategory(this)">
+                    <span>健康与饮食 <span class="category-summary">(不吃生腌等生食，海鲜务必煮熟。)</span></span>
+                    <span class="arrow">▼</span>
+                </div>
+                <ul class="safety-list">
+                    <li class="safety-item">11. <span class="highlight">不吃生腌等生食</span>，海鲜务必煮熟。</li>
+                    <li class="safety-item">12. 不喝自来水，仅饮用密封瓶装水。</li>
+                    <li class="safety-item">13. 注意防晒防暑，避免温差感冒。</li>
+                    <li class="safety-item">14. 携带驱蚊水，预防登革热。</li>
+                </ul>
+            </div>
+
+            <!-- 交通与法规 -->
+            <div class="safety-category">
+                <div class="sub-category-header" onclick="toggleSafetyCategory(this)">
+                    <span>交通与法规 <span class="category-summary">(泰国车辆左侧行驶，过马路看右看左。)</span></span>
+                    <span class="arrow">▼</span>
+                </div>
+                <ul class="safety-list">
+                    <li class="safety-item">15. 泰国车辆<span class="highlight">左侧行驶</span>，过马路先看右。</li>
+                    <li class="safety-item">16. 尽量使用 <span class="highlight">Grab</span> 打车。</li>
+                    <li class="safety-item">17. <span class="highlight">拒绝</span>任何形式的毒品接触。</li>
+                    <li class="safety-item">18. 尊重皇室，不公开讨论皇室。</li>
+                </ul>
+            </div>
+
+            <!-- 水上活动 -->
+            <div class="safety-category">
+                <div class="sub-category-header" onclick="toggleSafetyCategory(this)">
+                    <span>水上活动 <span class="category-summary">(关注海滩红旗警告，挂红旗时严禁下海。)</span></span>
+                    <span class="arrow">▼</span>
+                </div>
+                <ul class="safety-list">
+                    <li class="safety-item">19. 关注海滩红旗，<span class="highlight">挂红旗严禁下海</span>。</li>
+                    <li class="safety-item">20. 浮潜严禁踩踏珊瑚或喂鱼。</li>
+                </ul>
+            </div>
+
+            <!-- 其他事项 -->
+            <div class="safety-category">
+                <div class="sub-category-header" onclick="toggleSafetyCategory(this)">
+                    <span>其他事项 <span class="category-summary">(准备足额泰铢现金以备入境抽查。)</span></span>
+                    <span class="arrow">▼</span>
+                </div>
+                <ul class="safety-list">
+                    <li class="safety-item">21. 准备足额泰铢现金备查。</li>
+                    <li class="safety-item">22. 手机电量充足，带充电宝。</li>
+                    <li class="safety-item">23. 进寺庙着装得体。</li>
+                    <li class="safety-item">24. 钱包留紧急联系人信息。</li>
+                    <li class="safety-item">25. 确认保险包含高风险运动。</li>
+                    <li class="safety-item">26. 记录酒店泰文地址。</li>
+                    <li class="safety-item">27. 不在公共场合大声喧哗。</li>
+                    <li class="safety-item">28. 保持休息，避免行程过密。</li>
+                    <li class="safety-item">29. 确保小孩身上有家长联系方式。</li>
+                    <li class="safety-item">30. 遇事冷静，拨打旅游警察专线。</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- 二、紧急联系电话 -->
+    <div class="module">
+        <div class="module-header"><div class="module-title">二、紧急联系电话</div></div>
+        <div class="module-content">
+            <div class="phone-grid">
+                <div class="phone-card"><span class="label">旅游警察</span><a href="tel:1155">1155</a></div>
+                <div class="phone-card"><span class="label">报警求助</span><a href="tel:191">191</a></div>
+                <div class="phone-card"><span class="label">医疗急救</span><a href="tel:1669">1669</a></div>
+                <div class="phone-card"><span class="label">使馆协助</span><a href="tel:+66854833327">使馆电话</a></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 三、物品清单 (必备项) -->
+    <div class="module" id="essential-module">
+        <div class="module-header"><div class="module-title">三、物品清单 (必备项)</div></div>
+        <div class="module-content">
+            <div class="checklist-group">
+                <div class="group-header" onclick="toggleGroup(this)">
+                    <span>证件与财务</span><span class="arrow">▼</span>
+                </div>
+                <div class="items-container">
+                    <label class="item-box essential">身份证 <input type="checkbox"></label>
+                    <label class="item-box essential">护照 <input type="checkbox"></label>
+                    <label class="item-box essential">泰铢现金 <input type="checkbox"></label>
+                    <label class="item-box essential">银行卡 <input type="checkbox"></label>
+                    <label class="item-box essential">机票行程单 <input type="checkbox"></label>
+                    <label class="item-box essential">酒店订单 <input type="checkbox"></label>
+                </div>
+            </div>
+
+            <div class="checklist-group">
+                <div class="group-header" onclick="toggleGroup(this)">
+                    <span>电子设备</span><span class="arrow">▼</span>
+                </div>
+                <div class="items-container">
+                    <label class="item-box essential">手机/充电器 <input type="checkbox"></label>
+                    <label class="item-box essential">充电宝 <input type="checkbox"></label>
+                    <label class="item-box essential">电话卡/流量 <input type="checkbox"></label>
+                    <label class="item-box essential">AirTag <input type="checkbox"></label>
+                    <label class="item-box essential">转换插头 <input type="checkbox"></label>
+                </div>
+            </div>
+
+            <div class="checklist-group">
+                <div class="group-header" onclick="toggleGroup(this)">
+                    <span>常备药品</span><span class="arrow">▼</span>
+                </div>
+                <div class="items-container">
+                    <label class="item-box essential">肠胃药 <input type="checkbox"></label>
+                    <label class="item-box essential">感冒发烧药 <input type="checkbox"></label>
+                    <label class="item-box essential">过敏药 <input type="checkbox"></label>
+                    <label class="item-box essential">创可贴 <input type="checkbox"></label>
+                    <label class="item-box essential">驱蚊液 <input type="checkbox"></label>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 四、物品清单 (可选项) -->
+    <div class="module">
+        <div class="module-header"><div class="module-title">四、物品清单 (可选项)</div></div>
+        <div class="module-content">
+            <div class="checklist-group">
+                <div class="group-header" onclick="toggleGroup(this)">
+                    <span>个人护理</span><span class="arrow">▼</span>
+                </div>
+                <div class="items-container">
+                    <label class="item-box">防晒霜 <input type="checkbox"></label>
+                    <label class="item-box">墨镜/遮阳帽 <input type="checkbox"></label>
+                    <label class="item-box">一次性床单 <input type="checkbox"></label>
+                    <label class="item-box">泳衣 <input type="checkbox"></label>
+                    <label class="item-box">伞 <input type="checkbox"></label>
+                    <label class="item-box">便携衣架 <input type="checkbox"></label>
+                </div>
+            </div>
+            
+            <div class="checklist-group">
+                <div class="group-header" onclick="toggleGroup(this)">
+                    <span>娱乐辅助</span><span class="arrow">▼</span>
+                </div>
+                <div class="items-container">
+                    <label class="item-box">自拍杆 <input type="checkbox"></label>
+                    <label class="item-box">防水袋 <input type="checkbox"></label>
+                    <label class="item-box">颈枕 <input type="checkbox"></label>
+                    <label class="item-box">零食 <input type="checkbox"></label>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="action-bar">
+    <button class="btn btn-secondary" onclick="toggleAll(false)">收起所有</button>
+    <button class="btn btn-alert" onclick="remindEssentials()">物品提醒</button>
+    <button class="btn btn-secondary" onclick="toggleAll(true)">展开所有</button>
+</div>
+
+<script>
+    function toggleSafetyCategory(el, forceState) {
+        const category = el.parentElement;
+        const arrow = el.querySelector('.arrow');
+        if (forceState === true) {
+            category.classList.remove('collapsed');
+            arrow.textContent = '▼';
+        } else if (forceState === false) {
+            category.classList.add('collapsed');
+            arrow.textContent = '◀';
+        } else {
+            category.classList.toggle('collapsed');
+            arrow.textContent = category.classList.contains('collapsed') ? '◀' : '▼';
+        }
+    }
+
+    function toggleGroup(el, forceState) {
+        const container = el.nextElementSibling;
+        const arrow = el.querySelector('.arrow');
+        if (forceState === true) {
+            container.classList.remove('hidden');
+            el.classList.remove('collapsed');
+            arrow.textContent = '▼';
+        } else if (forceState === false) {
+            container.classList.add('hidden');
+            el.classList.add('collapsed');
+            arrow.textContent = '◀';
+        } else {
+            const isHidden = container.classList.contains('hidden');
+            if (isHidden) {
+                container.classList.remove('hidden');
+                el.classList.remove('collapsed');
+                arrow.textContent = '▼';
+            } else {
+                container.classList.add('hidden');
+                el.classList.add('collapsed');
+                arrow.textContent = '◀';
+            }
+        }
+    }
+
+    function toggleAll(expand) {
+        document.querySelectorAll('.sub-category-header').forEach(h => toggleSafetyCategory(h, expand));
+        document.querySelectorAll('.group-header').forEach(h => toggleGroup(h, expand));
+    }
+
+    function remindEssentials() {
+        const essentialModule = document.getElementById('essential-module');
+        const groups = essentialModule.querySelectorAll('.checklist-group');
+        groups.forEach(g => toggleGroup(g.querySelector('.group-header'), true));
+
+        const essentials = essentialModule.querySelectorAll('.item-box.essential');
+        let count = 0;
+        essentials.forEach(item => {
+            const checkbox = item.querySelector('input');
+            if (!checkbox.checked) {
+                item.classList.add('missing-essential');
+                count++;
+            } else {
+                item.classList.remove('missing-essential');
+            }
+        });
+
+        if (count > 0) {
+            essentialModule.scrollIntoView({ behavior: 'smooth' });
+            setTimeout(() => { alert('提醒：还有 ' + count + ' 项必备物品未准备（已自动展开并标红）'); }, 500);
+        } else {
+            alert('太棒了！所有必备物品已就绪。');
+        }
+    }
+</script>
+
+</body>
+</html>
