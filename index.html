@@ -5,88 +5,184 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>泰国旅行安全与备忘手册</title>
     <style>
+        /* 1. 主题变量配置系统 */
         :root {
+            /* 默认主题 (原版风格) */
             --primary: #008080;
-            --secondary: #f4f7f6;
+            --primary-light: #20b2aa;
+            --bg-body: #f4f7f6;
+            --bg-card: #ffffff;
+            --text-main: #2c3e50;
+            --text-muted: #7f8c8d;
             --accent: #e74c3c;
-            --text: #2c3e50;
-            --shadow: 0 4px 6px rgba(0,0,0,0.1);
+            --btn-text: #ffffff;
             --border-radius: 12px;
+            --shadow: 0 4px 12px rgba(0,0,0,0.08);
+            --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            --glass-opacity: 1;
+            --blur: 0px;
+        }
+
+        /* 简约风 (靛蓝 - Soft UI) */
+        [data-theme="minimal"] {
+            --primary: #6366F1;
+            --primary-light: #818cf8;
+            --bg-body: #F8FAFC;
+            --bg-card: #ffffff;
+            --text-main: #1E293B;
+            --text-muted: #64748B;
+            --accent: #F43F5E;
+            --border-radius: 20px;
+            --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+            --glass-opacity: 1;
+            --blur: 0px;
+        }
+
+        /* 极简果冻/玻璃拟态 (Glassmorphism) */
+        [data-theme="glass"] {
+            --primary: #4F46E5;
+            --primary-light: #7C3AED;
+            --bg-body: #EEF2FF;
+            --bg-card: rgba(255, 255, 255, 0.7);
+            --text-main: #1E1B4B;
+            --text-muted: #4338CA;
+            --accent: #F43F5E;
+            --border-radius: 24px;
+            --shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
+            --glass-opacity: 0.8;
+            --blur: 15px;
+        }
+
+        /* “莫兰迪”高级灰 (Nature) */
+        [data-theme="nature"] {
+            --primary: #8E9775;
+            --primary-light: #AF9164;
+            --bg-body: #F7F7F7;
+            --bg-card: #ffffff;
+            --text-main: #555555;
+            --text-muted: #8C8C8C;
+            --accent: #E28E8E;
+            --border-radius: 8px;
+            --shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            --glass-opacity: 1;
+            --blur: 0px;
         }
 
         * {
             box-sizing: border-box;
             -webkit-tap-highlight-color: transparent;
+            transition: background 0.3s, color 0.3s, border-color 0.3s, transform 0.2s, box-shadow 0.3s;
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background-color: var(--secondary);
-            color: var(--text);
+            font-family: var(--font-family);
+            background-color: var(--bg-body);
+            color: var(--text-main);
             line-height: 1.6;
             margin: 0;
             padding: 0;
+            /* 玻璃拟态底层装饰 */
+            background-image: radial-gradient(circle at 10% 20%, rgba(99, 102, 241, 0.05) 0%, transparent 20%), 
+                              radial-gradient(circle at 90% 80%, rgba(244, 63, 94, 0.05) 0%, transparent 20%);
         }
 
         .container {
             max-width: 600px;
             margin: 0 auto;
-            padding: 20px 15px 120px 15px;
+            padding: 20px 15px 140px 15px;
         }
 
         /* Header Area */
         header {
-            background: linear-gradient(135deg, #008080, #20b2aa);
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
             color: white;
-            padding: 30px 20px;
+            padding: 40px 20px;
             border-radius: 0 0 var(--border-radius) var(--border-radius);
             text-align: center;
-            margin-bottom: 20px;
+            margin-bottom: 25px;
             box-shadow: var(--shadow);
         }
 
-        header h1 {
-            margin: 0;
-            font-size: 1.5rem;
-        }
-
-        header p {
-            margin: 10px 0 0;
-            opacity: 0.9;
-            font-size: 0.9rem;
-        }
+        header h1 { margin: 0; font-size: 1.6rem; letter-spacing: 1px; }
+        header p { margin: 10px 0 0; opacity: 0.9; font-size: 0.95rem; }
 
         .important-note {
             background: rgba(255,255,255,0.2);
-            padding: 5px 10px;
+            padding: 6px 15px;
             border-radius: 20px;
             display: inline-block;
-            margin-top: 10px;
-            font-size: 0.8rem;
+            margin-top: 15px;
+            font-size: 0.85rem;
+            backdrop-filter: blur(4px);
         }
+
+        /* 弹出式主题切换组件 */
+        .theme-popover {
+            position: relative;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: flex-end;
+        }
+        .theme-trigger {
+            background: var(--bg-card);
+            border: 1px solid rgba(0,0,0,0.05);
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: var(--shadow);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            color: var(--primary);
+        }
+        .theme-menu {
+            position: absolute;
+            top: 45px;
+            right: 0;
+            background: var(--bg-card);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            padding: 8px;
+            z-index: 1000;
+            display: none;
+            flex-direction: column;
+            min-width: 120px;
+            border: 1px solid rgba(0,0,0,0.05);
+            backdrop-filter: blur(var(--blur));
+        }
+        .theme-menu.show { display: flex; }
+        .theme-option {
+            padding: 10px 15px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            border-radius: calc(var(--border-radius) / 2);
+            white-space: nowrap;
+        }
+        .theme-option:hover { background: rgba(0,0,0,0.03); }
+        .theme-option.active { color: var(--primary); font-weight: bold; background: rgba(0,0,0,0.05); }
 
         /* Section Modules */
         .module {
-            background: white;
+            background: var(--bg-card);
             border-radius: var(--border-radius);
-            margin-bottom: 15px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            margin-bottom: 18px;
+            box-shadow: var(--shadow);
             overflow: hidden;
+            backdrop-filter: blur(var(--blur));
+            -webkit-backdrop-filter: blur(var(--blur));
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
 
         .module-header {
-            padding: 15px;
-            background: white;
+            padding: 18px;
+            background: rgba(0,0,0,0.01);
             display: flex;
             justify-content: space-between;
             align-items: center;
             font-weight: bold;
-            border-bottom: 1px solid #f0f0f0;
-            cursor: pointer;
-        }
-
-        .module-content {
-            padding: 15px;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
         }
 
         .module-title {
@@ -94,99 +190,50 @@
             align-items: center;
             gap: 10px;
             color: var(--primary);
-        }
-
-        /* Safety Category Styles */
-        .sub-category-header {
-            font-size: 0.85rem;
-            color: #7f8c8d;
-            margin: 15px 0 5px;
-            padding-bottom: 5px;
-            border-bottom: 2px solid var(--secondary);
-            cursor: pointer;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background-color: #fafafa;
-            padding: 8px;
-            border-radius: 6px;
-        }
-
-        .category-summary {
-            font-weight: bold;
-            color: var(--text);
-            margin-left: 5px;
-            display: none;
-        }
-
-        .collapsed .category-summary {
-            display: inline;
-        }
-
-        .collapsed .safety-list {
-            display: none;
-        }
-
-        .safety-list {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-
-        .safety-item {
-            padding: 10px 0;
-            border-bottom: 1px dashed #eee;
-            font-size: 0.9rem;
-        }
-
-        .safety-item:last-child {
-            border-bottom: none;
-        }
-
-        .highlight {
-            color: var(--accent);
-            font-weight: bold;
-        }
-
-        /* Emergency Phones */
-        .phone-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-        }
-
-        .phone-card {
-            background: #f8fbfb;
-            padding: 12px;
-            border-radius: 8px;
-            text-align: center;
-            border: 1px solid #e0eded;
-        }
-
-        .phone-card .label {
-            font-size: 0.75rem;
-            color: #666;
-            display: block;
-        }
-
-        .phone-card a {
-            color: var(--primary);
-            text-decoration: none;
-            font-weight: bold;
             font-size: 1.1rem;
         }
 
-        /* Checklist Styles */
-        .checklist-group {
-            margin-bottom: 20px;
+        .sub-category-header {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin: 10px 0;
+            padding: 12px;
+            background-color: rgba(0,0,0,0.02);
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
+        .category-summary { font-weight: normal; font-size: 0.8rem; display: none; margin-left: 5px; }
+        .collapsed .category-summary { display: inline; }
+        .collapsed .safety-list { display: none; }
+
+        .safety-list { list-style: none; padding: 0 10px; margin: 0; }
+        .safety-item { padding: 12px 0; border-bottom: 1px solid rgba(0,0,0,0.03); font-size: 0.95rem; }
+        .highlight { color: var(--accent); font-weight: bold; }
+
+        /* Emergency Phones */
+        .phone-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 15px; }
+        .phone-card {
+            background: rgba(0,0,0,0.02);
+            padding: 15px 10px;
+            border-radius: 12px;
+            text-align: center;
+            border: 1px solid rgba(0,0,0,0.05);
+        }
+        .phone-card .label { font-size: 0.75rem; color: var(--text-muted); display: block; margin-bottom: 5px; }
+        .phone-card a { color: var(--primary); text-decoration: none; font-weight: bold; font-size: 1.1rem; }
+
+        /* Checklist Styles */
+        .checklist-group { margin-bottom: 20px; padding: 0 15px; }
         .group-header {
-            background: #f0f7f7;
-            padding: 8px 12px;
-            border-radius: 6px;
+            background: rgba(0,0,0,0.03);
+            padding: 12px 15px;
+            border-radius: 10px;
             margin-bottom: 10px;
-            font-size: 0.9rem;
+            font-size: 0.95rem;
             font-weight: bold;
             display: flex;
             justify-content: space-between;
@@ -194,107 +241,68 @@
             cursor: pointer;
         }
 
-        .group-actions {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-        }
-
-        .btn-text {
-            font-size: 0.75rem;
-            color: var(--primary);
-            text-decoration: underline;
-            cursor: pointer;
-        }
-
-        .items-container {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 8px;
-        }
-
-        .items-container.hidden {
-            display: none !important;
-        }
+        .btn-text { font-size: 0.8rem; color: var(--primary); margin: 0 5px; cursor: pointer; opacity: 0.8; }
+        .items-container { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+        .items-container.hidden { display: none !important; }
 
         .item-box {
-            background: #fff;
-            border: 1px solid #eee;
-            border-radius: 6px;
-            padding: 8px 4px;
+            background: var(--bg-card);
+            border: 1.5px solid rgba(0,0,0,0.05);
+            border-radius: 12px;
+            padding: 12px 5px;
             display: flex;
             flex-direction: column;
             align-items: center;
             text-align: center;
-            font-size: 0.8rem;
-            transition: all 0.3s;
+            font-size: 0.85rem;
         }
-
-        .item-box input {
-            margin-bottom: 5px;
-            width: 18px;
-            height: 18px;
-        }
+        .item-box input { width: 20px; height: 20px; margin-bottom: 8px; cursor: pointer; accent-color: var(--primary); }
 
         /* Fixed Action Bar */
         .action-bar {
             position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: white;
-            padding: 12px 10px;
-            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+            bottom: 0; left: 0; right: 0;
+            background: rgba(255,255,255,0.85);
+            backdrop-filter: blur(15px);
+            padding: 15px 10px 30px 10px;
+            box-shadow: 0 -5px 20px rgba(0,0,0,0.05);
             display: flex;
             justify-content: space-around;
             align-items: center;
             z-index: 100;
-            gap: 8px;
+            gap: 10px;
         }
 
         .btn {
             border: none;
-            border-radius: 20px;
+            border-radius: 50px;
             font-weight: bold;
             font-size: 0.85rem;
             cursor: pointer;
-            transition: all 0.2s;
-            padding: 10px 15px;
+            padding: 12px 10px;
             flex: 1;
         }
+        .btn-secondary { background-color: #eee; color: #555; }
+        .btn-alert { background-color: var(--primary); color: white; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        .btn-reset { background-color: #fceaea; color: var(--accent); }
+        .btn:active { transform: scale(0.95); }
 
-        .btn-secondary {
-            background-color: #eee;
-            color: #666;
-        }
-
-        .btn-alert {
-            background-color: var(--accent);
-            color: white;
-            box-shadow: 0 4px 10px rgba(231, 76, 60, 0.3);
-            flex: 1.5;
-        }
-
-        .btn:active {
-            transform: scale(0.95);
-        }
-
-        /* Missing alert style */
         .missing-essential {
             color: var(--accent) !important;
             font-weight: bold;
             border-color: var(--accent) !important;
-            background-color: #fff5f5 !important;
+            background-color: rgba(244, 63, 94, 0.05) !important;
+            animation: shake 0.4s ease-in-out;
         }
 
-        .arrow {
-            transition: transform 0.3s;
-            font-size: 0.7rem;
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-4px); }
+            75% { transform: translateX(4px); }
         }
 
-        .collapsed .arrow {
-            transform: rotate(-90deg);
-        }
+        .arrow { transition: transform 0.3s; font-size: 0.7rem; }
+        .collapsed .arrow { transform: rotate(-90deg); }
     </style>
 </head>
 <body>
@@ -307,14 +315,27 @@
 
 <div class="container">
     
+    <div class="theme-popover">
+        <div class="theme-trigger" onclick="toggleThemeMenu(event)">
+            <span>风格切换</span>
+            <span class="arrow" id="theme-arrow">▼</span>
+        </div>
+        <div class="theme-menu" id="theme-menu">
+            <div class="theme-option" onclick="setTheme('default')">默认</div>
+            <div class="theme-option" onclick="setTheme('minimal')">简约风</div>
+            <div class="theme-option" onclick="setTheme('glass')">玻璃拟态</div>
+            <div class="theme-option" onclick="setTheme('nature')">自然风</div>
+        </div>
+    </div>
+
     <div class="module">
         <div class="module-header">
             <div class="module-title">一、核心安全提示 (30条)</div>
         </div>
-        <div class="module-content">
+        <div class="module-content" style="padding: 0 15px 15px;">
             <div class="safety-category">
                 <div class="sub-category-header" onclick="toggleSafetyCategory(this)">
-                    <span>人员安全 <span class="category-summary">(不独自行动，夜晚不单独外出。)</span></span>
+                    <span>人员安全 <span class="category-summary">(不独自行动...)</span></span>
                     <span class="arrow">▼</span>
                 </div>
                 <ul class="safety-list">
@@ -326,23 +347,21 @@
                     <li class="safety-item">6. 请勿触摸泰国小孩的头部 (文化禁忌)。</li>
                 </ul>
             </div>
-
             <div class="safety-category">
                 <div class="sub-category-header" onclick="toggleSafetyCategory(this)">
-                    <span>财物与信息 <span class="category-summary">(建议删除虚拟货币钱包、理财类App。)</span></span>
+                    <span>财物与信息 <span class="category-summary">(建议删除理财App...)</span></span>
                     <span class="arrow">▼</span>
                 </div>
                 <ul class="safety-list">
                     <li class="safety-item">7. <span class="highlight">建议删除</span>虚拟货币钱包、基金、理财类App。</li>
                     <li class="safety-item">8. <span class="highlight">严禁露财</span>，首饰、大额现金存保险箱。</li>
                     <li class="safety-item">9. 护照重要证件照片备份。</li>
-                    <li class="safety-item">10. 警惕主动搭讪的"好心人"。</li>
+                    <li class="safety-item">10. 警惕主动搭衫的"好心人"。</li>
                 </ul>
             </div>
-
             <div class="safety-category">
                 <div class="sub-category-header" onclick="toggleSafetyCategory(this)">
-                    <span>健康与饮食 <span class="category-summary">(不吃生腌等生食，海鲜务必煮熟。)</span></span>
+                    <span>健康与饮食 <span class="category-summary">(不吃生腌...)</span></span>
                     <span class="arrow">▼</span>
                 </div>
                 <ul class="safety-list">
@@ -352,10 +371,9 @@
                     <li class="safety-item">14. 携带驱蚊水，预防登革热。</li>
                 </ul>
             </div>
-
             <div class="safety-category">
                 <div class="sub-category-header" onclick="toggleSafetyCategory(this)">
-                    <span>交通与法规 <span class="category-summary">(泰国车辆左侧行驶，过马路看右看左。)</span></span>
+                    <span>交通与法规 <span class="category-summary">(左侧行驶...)</span></span>
                     <span class="arrow">▼</span>
                 </div>
                 <ul class="safety-list">
@@ -365,10 +383,9 @@
                     <li class="safety-item">18. 尊重皇室，不公开讨论皇室。</li>
                 </ul>
             </div>
-
             <div class="safety-category">
                 <div class="sub-category-header" onclick="toggleSafetyCategory(this)">
-                    <span>水上活动 <span class="category-summary">(关注海滩红旗警告，挂红旗时严禁下海。)</span></span>
+                    <span>水上活动 <span class="category-summary">(红旗警告...)</span></span>
                     <span class="arrow">▼</span>
                 </div>
                 <ul class="safety-list">
@@ -376,10 +393,9 @@
                     <li class="safety-item">20. 浮潜严禁踩踏珊瑚。</li>
                 </ul>
             </div>
-
             <div class="safety-category">
                 <div class="sub-category-header" onclick="toggleSafetyCategory(this)">
-                    <span>其他事项 <span class="category-summary">(准备足额泰铢现金以备入境抽查。)</span></span>
+                    <span>其他事项 <span class="category-summary">(现金抽查...)</span></span>
                     <span class="arrow">▼</span>
                 </div>
                 <ul class="safety-list">
@@ -417,7 +433,7 @@
     <div class="module" id="essential-module">
         <div class="module-header"><div class="module-title">三、物品清单 (必备项)</div></div>
         <div class="module-content">
-            <div class="checklist-group">
+            <div class="checklist-group" data-group-id="doc">
                 <div class="group-header" onclick="handleGroupClick(event, this)">
                     <span>证件与财务</span>
                     <div class="group-actions">
@@ -427,19 +443,18 @@
                     </div>
                 </div>
                 <div class="items-container">
-                    <label class="item-box essential">身份证 <input type="checkbox"></label>
-                    <label class="item-box essential">护照(有效期>6个月)<input type="checkbox"></label>
-                    <label class="item-box essential">泰铢现金 <input type="checkbox"></label>
-                    <label class="item-box essential">泰国电话卡 <input type="checkbox"></label>
-                    <label class="item-box essential">卡针/卡包<input type="checkbox"></label>
-                    <label class="item-box essential">机票行程单 <input type="checkbox"></label>
-                    <label class="item-box essential">酒店确认单 <input type="checkbox"></label>
-                    <label class="item-box essential">电子入境申请 <input type="checkbox"></label>
-                    <label class="item-box essential">旅游保险单 <input type="checkbox"></label>
+                    <label class="item-box essential">身份证 <input type="checkbox" data-id="e1"></label>
+                    <label class="item-box essential">护照(有效期>6个月)<input type="checkbox" data-id="e2"></label>
+                    <label class="item-box essential">泰铢现金 <input type="checkbox" data-id="e3"></label>
+                    <label class="item-box essential">泰国电话卡 <input type="checkbox" data-id="e4"></label>
+                    <label class="item-box essential">卡针/卡包<input type="checkbox" data-id="e5"></label>
+                    <label class="item-box essential">机票行程单 <input type="checkbox" data-id="e6"></label>
+                    <label class="item-box essential">酒店确认单 <input type="checkbox" data-id="e7"></label>
+                    <label class="item-box essential">电子入境申请 <input type="checkbox" data-id="e8"></label>
+                    <label class="item-box essential">旅游保险单 <input type="checkbox" data-id="e9"></label>
                 </div>
             </div>
-
-            <div class="checklist-group">
+            <div class="checklist-group" data-group-id="clothes">
                 <div class="group-header" onclick="handleGroupClick(event, this)">
                     <span>服饰</span>
                     <div class="group-actions">
@@ -449,21 +464,20 @@
                     </div>
                 </div>
                 <div class="items-container">
-                    <label class="item-box essential">短袖*4 <input type="checkbox"></label>
-                    <label class="item-box essential">短裤*4<input type="checkbox"></label>
-                    <label class="item-box essential">袜子*4 <input type="checkbox"></label>
-                    <label class="item-box essential">内裤*4 <input type="checkbox"></label>
-                    <label class="item-box essential">防晒衣 <input type="checkbox"></label>
-                    <label class="item-box essential">薄长裤<input type="checkbox"></label>
-                    <label class="item-box essential">拖鞋 <input type="checkbox"></label>
-                    <label class="item-box essential">休闲鞋 <input type="checkbox"></label>
-                    <label class="item-box essential">墨镜 <input type="checkbox"></label>
-                    <label class="item-box essential">U型枕 <input type="checkbox"></label>
-                    <label class="item-box essential">小背包 <input type="checkbox"></label>
+                    <label class="item-box essential">短袖*4 <input type="checkbox" data-id="e10"></label>
+                    <label class="item-box essential">短裤*4<input type="checkbox" data-id="e11"></label>
+                    <label class="item-box essential">袜子*4 <input type="checkbox" data-id="e12"></label>
+                    <label class="item-box essential">内裤*4 <input type="checkbox" data-id="e13"></label>
+                    <label class="item-box essential">防晒衣 <input type="checkbox" data-id="e14"></label>
+                    <label class="item-box essential">薄长裤<input type="checkbox" data-id="e15"></label>
+                    <label class="item-box essential">拖鞋 <input type="checkbox" data-id="e16"></label>
+                    <label class="item-box essential">休闲鞋 <input type="checkbox" data-id="e17"></label>
+                    <label class="item-box essential">墨镜 <input type="checkbox" data-id="e18"></label>
+                    <label class="item-box essential">U型枕 <input type="checkbox" data-id="e19"></label>
+                    <label class="item-box essential">小背包 <input type="checkbox" data-id="e20"></label>
                 </div>
             </div>
-
-            <div class="checklist-group">
+            <div class="checklist-group" data-group-id="elec">
                 <div class="group-header" onclick="handleGroupClick(event, this)">
                     <span>电子设备</span>
                     <div class="group-actions">
@@ -473,17 +487,17 @@
                     </div>
                 </div>
                 <div class="items-container">
-                    <label class="item-box essential">定位器/电子手表 <input type="checkbox"></label>
-                    <label class="item-box essential">手机/充电器 <input type="checkbox"></label>
-                    <label class="item-box essential">充电宝 <input type="checkbox"></label>
-                    <label class="item-box essential">耳机 <input type="checkbox"></label>
-                    <label class="item-box essential">小音响 <input type="checkbox"></label>
-                    <label class="item-box essential">小风扇 <input type="checkbox"></label>
-                    <label class="item-box essential">电脑<input type="checkbox"></label>
-                    <label class="item-box essential">相机<input type="checkbox"></label>
+                    <label class="item-box essential">定位器/电子表 <input type="checkbox" data-id="e21"></label>
+                    <label class="item-box essential">手机/充电器 <input type="checkbox" data-id="e22"></label>
+                    <label class="item-box essential">充电宝 <input type="checkbox" data-id="e23"></label>
+                    <label class="item-box essential">耳机 <input type="checkbox" data-id="e24"></label>
+                    <label class="item-box essential">小音响 <input type="checkbox" data-id="e25"></label>
+                    <label class="item-box essential">小风扇 <input type="checkbox" data-id="e26"></label>
+                    <label class="item-box essential">电脑<input type="checkbox" data-id="e27"></label>
+                    <label class="item-box essential">相机<input type="checkbox" data-id="e28"></label>
                 </div>
             </div>
-            <div class="checklist-group">
+            <div class="checklist-group" data-group-id="daily">
                 <div class="group-header" onclick="handleGroupClick(event, this)">
                     <span>日用</span>
                     <div class="group-actions">
@@ -493,17 +507,17 @@
                     </div>
                 </div>
                 <div class="items-container">
-                    <label class="item-box essential">牙线 <input type="checkbox"></label>
-                    <label class="item-box essential">纸巾 <input type="checkbox"></label>
-                    <label class="item-box essential">消毒湿巾 <input type="checkbox"></label>
-                    <label class="item-box essential">洗脸巾 <input type="checkbox"></label>
-                    <label class="item-box essential">防晒帽 <input type="checkbox"></label>
-                    <label class="item-box essential">保湿霜 <input type="checkbox"></label>
-                    <label class="item-box essential">防晒霜 <input type="checkbox"></label>
-                    <label class="item-box essential">遮阳伞 <input type="checkbox"></label>
+                    <label class="item-box essential">牙线 <input type="checkbox" data-id="e29"></label>
+                    <label class="item-box essential">纸巾 <input type="checkbox" data-id="e30"></label>
+                    <label class="item-box essential">消毒湿巾 <input type="checkbox" data-id="e31"></label>
+                    <label class="item-box essential">洗脸巾 <input type="checkbox" data-id="e32"></label>
+                    <label class="item-box essential">防晒帽 <input type="checkbox" data-id="e33"></label>
+                    <label class="item-box essential">保湿霜 <input type="checkbox" data-id="e34"></label>
+                    <label class="item-box essential">防晒霜 <input type="checkbox" data-id="e35"></label>
+                    <label class="item-box essential">遮阳伞 <input type="checkbox" data-id="e36"></label>
                 </div>
             </div>
-            <div class="checklist-group">
+            <div class="checklist-group" data-group-id="water">
                 <div class="group-header" onclick="handleGroupClick(event, this)">
                     <span>水上用品</span>
                     <div class="group-actions">
@@ -513,12 +527,12 @@
                     </div>
                 </div>
                 <div class="items-container">
-                    <label class="item-box essential">泳衣裤 <input type="checkbox"></label>
-                    <label class="item-box essential">手机防水袋 <input type="checkbox"></label>
-                    <label class="item-box essential">浮潜咬嘴 <input type="checkbox"></label>
+                    <label class="item-box essential">泳衣裤 <input type="checkbox" data-id="e37"></label>
+                    <label class="item-box essential">手机防水袋 <input type="checkbox" data-id="e38"></label>
+                    <label class="item-box essential">浮潜咬嘴 <input type="checkbox" data-id="e39"></label>
                 </div>
             </div>
-            <div class="checklist-group">
+            <div class="checklist-group" data-group-id="med">
                 <div class="group-header" onclick="handleGroupClick(event, this)">
                     <span>常备药品</span>
                     <div class="group-actions">
@@ -528,16 +542,16 @@
                     </div>
                 </div>
                 <div class="items-container">
-                    <label class="item-box essential">布洛芬 <input type="checkbox"></label>
-                    <label class="item-box essential">感冒发烧药 <input type="checkbox"></label>
-                    <label class="item-box essential">消炎药 <input type="checkbox"></label>
-                    <label class="item-box essential">创可贴 <input type="checkbox"></label>
-                    <label class="item-box essential">碘伏棉签 <input type="checkbox"></label>
-                    <label class="item-box essential">驱蚊液 <input type="checkbox"></label>
-                    <label class="item-box essential">止泻药 <input type="checkbox"></label>
+                    <label class="item-box essential">布洛芬 <input type="checkbox" data-id="e40"></label>
+                    <label class="item-box essential">感冒发烧药 <input type="checkbox" data-id="e41"></label>
+                    <label class="item-box essential">消炎药 <input type="checkbox" data-id="e42"></label>
+                    <label class="item-box essential">创可贴 <input type="checkbox" data-id="e43"></label>
+                    <label class="item-box essential">碘伏棉签 <input type="checkbox" data-id="e44"></label>
+                    <label class="item-box essential">驱蚊液 <input type="checkbox" data-id="e45"></label>
+                    <label class="item-box essential">止泻药 <input type="checkbox" data-id="e46"></label>
                 </div>
             </div>
-            <div class="checklist-group">
+            <div class="checklist-group" data-group-id="apps">
                 <div class="group-header" onclick="handleGroupClick(event, this)">
                     <span>APP</span>
                     <div class="group-actions">
@@ -547,9 +561,9 @@
                     </div>
                 </div>
                 <div class="items-container">
-                    <label class="item-box essential">谷歌翻译 <input type="checkbox"></label>
-                    <label class="item-box essential">谷歌地图 <input type="checkbox"></label>
-                    <label class="item-box essential">Grab打车 <input type="checkbox"></label>
+                    <label class="item-box essential">谷歌翻译 <input type="checkbox" data-id="e47"></label>
+                    <label class="item-box essential">谷歌地图 <input type="checkbox" data-id="e48"></label>
+                    <label class="item-box essential">Grab打车 <input type="checkbox" data-id="e49"></label>
                 </div>
             </div>
         </div>
@@ -568,17 +582,16 @@
                     </div>
                 </div>
                 <div class="items-container">
-                    <label class="item-box">牙刷 <input type="checkbox"></label>
-                    <label class="item-box">牙膏 <input type="checkbox"></label>
-                    <label class="item-box">面膜 <input type="checkbox"></label>
-                    <label class="item-box">洗面奶 <input type="checkbox"></label>
-                    <label class="item-box">洗发水 <input type="checkbox"></label>
-                    <label class="item-box">沐浴露 <input type="checkbox"></label>
-                    <label class="item-box">口红 <input type="checkbox"></label>
-                    <label class="item-box">化妆用品 <input type="checkbox"></label>
+                    <label class="item-box">牙刷 <input type="checkbox" data-id="o1"></label>
+                    <label class="item-box">牙膏 <input type="checkbox" data-id="o2"></label>
+                    <label class="item-box">面膜 <input type="checkbox" data-id="o3"></label>
+                    <label class="item-box">洗面奶 <input type="checkbox" data-id="o4"></label>
+                    <label class="item-box">洗发水 <input type="checkbox" data-id="o5"></label>
+                    <label class="item-box">沐浴露 <input type="checkbox" data-id="o6"></label>
+                    <label class="item-box">口红 <input type="checkbox" data-id="o7"></label>
+                    <label class="item-box">化妆用品 <input type="checkbox" data-id="o8"></label>
                 </div>
             </div>
-
             <div class="checklist-group">
                 <div class="group-header" onclick="handleGroupClick(event, this)">
                     <span>辅助</span>
@@ -589,18 +602,18 @@
                     </div>
                 </div>
                 <div class="items-container">
-                    <label class="item-box">眼罩 <input type="checkbox"></label>
-                    <label class="item-box">压缩浴巾 <input type="checkbox"></label>
-                    <label class="item-box">睡衣裤 <input type="checkbox"></label>
-                    <label class="item-box">泳帽+泳镜<input type="checkbox"></label>
-                    <label class="item-box">雨伞 <input type="checkbox"></label>
-                    <label class="item-box">沙滩鞋 <input type="checkbox"></label>
-                    <label class="item-box">备用眼镜 <input type="checkbox"></label>
-                    <label class="item-box">签字笔 <input type="checkbox"></label>
-                    <label class="item-box">VISA卡(绑Apple Pay)<input type="checkbox"></label>
-                    <label class="item-box">商业保险卡<input type="checkbox"></label>
-                    <label class="item-box">自拍杆 <input type="checkbox"></label>
-                    <label class="item-box">手机支架 <input type="checkbox"></label>
+                    <label class="item-box">眼罩 <input type="checkbox" data-id="o9"></label>
+                    <label class="item-box">压缩浴巾 <input type="checkbox" data-id="o10"></label>
+                    <label class="item-box">睡衣裤 <input type="checkbox" data-id="o11"></label>
+                    <label class="item-box">泳帽+泳镜 <input type="checkbox" data-id="o12"></label>
+                    <label class="item-box">雨伞 <input type="checkbox" data-id="o13"></label>
+                    <label class="item-box">沙滩鞋 <input type="checkbox" data-id="o14"></label>
+                    <label class="item-box">备用眼镜 <input type="checkbox" data-id="o15"></label>
+                    <label class="item-box">签字笔 <input type="checkbox" data-id="o16"></label>
+                    <label class="item-box">VISA卡 <input type="checkbox" data-id="o17"></label>
+                    <label class="item-box">商业保险卡 <input type="checkbox" data-id="o18"></label>
+                    <label class="item-box">自拍杆 <input type="checkbox" data-id="o19"></label>
+                    <label class="item-box">手机支架 <input type="checkbox" data-id="o20"></label>
                 </div>
             </div>
         </div>
@@ -608,37 +621,95 @@
 </div>
 
 <div class="action-bar">
-    <button class="btn btn-secondary" onclick="toggleAll(false)">收起所有</button>
+    <button class="btn btn-secondary" onclick="toggleAll(false)">收起</button>
     <button class="btn btn-alert" onclick="remindEssentials()">物品提醒</button>
-    <button class="btn btn-secondary" onclick="toggleAll(true)">展开所有</button>
+    <button class="btn btn-secondary" onclick="toggleAll(true)">展开</button>
+    <button class="btn btn-reset" onclick="resetAll()">重置</button>
 </div>
 
 <script>
-    // 初始化：为所有checkbox增加点击监听，一旦勾选则取消警告红色标识
+    window.onload = function() {
+        loadData();
+        loadTheme();
+        // 点击外部关闭主题菜单
+        document.addEventListener('click', function() {
+            closeThemeMenu();
+        });
+    };
+
+    // --- 数据持久化 ---
+    function saveData() {
+        const states = {};
+        document.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+            if(cb.dataset.id) states[cb.dataset.id] = cb.checked;
+        });
+        localStorage.setItem('travel_checklist_data', JSON.stringify(states));
+    }
+
+    function loadData() {
+        const saved = localStorage.getItem('travel_checklist_data');
+        if (saved) {
+            const states = JSON.parse(saved);
+            document.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+                if(cb.dataset.id && states[cb.dataset.id] !== undefined) {
+                    cb.checked = states[cb.dataset.id];
+                }
+            });
+        }
+    }
+
+    // --- 主题切换逻辑 ---
+    function toggleThemeMenu(e) {
+        e.stopPropagation();
+        const menu = document.getElementById('theme-menu');
+        const arrow = id('theme-arrow');
+        const isShow = menu.classList.toggle('show');
+        arrow.style.transform = isShow ? 'rotate(180deg)' : 'rotate(0deg)';
+    }
+
+    function closeThemeMenu() {
+        const menu = id('theme-menu');
+        const arrow = id('theme-arrow');
+        menu.classList.remove('show');
+        arrow.style.transform = 'rotate(0deg)';
+    }
+
+    function setTheme(themeName) {
+        document.documentElement.setAttribute('data-theme', themeName);
+        localStorage.setItem('travel_theme_v2', themeName);
+        
+        // 更新菜单 UI
+        document.querySelectorAll('.theme-option').forEach(opt => {
+            opt.classList.toggle('active', opt.getAttribute('onclick').includes(themeName));
+        });
+        closeThemeMenu();
+    }
+
+    function loadTheme() {
+        const savedTheme = localStorage.getItem('travel_theme_v2') || 'default';
+        setTheme(savedTheme);
+    }
+
+    function id(str) { return document.getElementById(str); }
+
+    // --- 核心功能 ---
     document.querySelectorAll('.item-box input').forEach(checkbox => {
         checkbox.addEventListener('change', function() {
             if (this.checked) {
                 this.parentElement.classList.remove('missing-essential');
             }
+            saveData();
         });
     });
 
     function toggleSafetyCategory(el, forceState) {
         const category = el.parentElement;
         const arrow = el.querySelector('.arrow');
-        if (forceState === true) {
-            category.classList.remove('collapsed');
-            arrow.textContent = '▼';
-        } else if (forceState === false) {
-            category.classList.add('collapsed');
-            arrow.textContent = '◀';
-        } else {
-            category.classList.toggle('collapsed');
-            arrow.textContent = category.classList.contains('collapsed') ? '◀' : '▼';
-        }
+        const isCollapsed = forceState === undefined ? !category.classList.contains('collapsed') : !forceState;
+        category.classList.toggle('collapsed', isCollapsed);
+        arrow.textContent = isCollapsed ? '◀' : '▼';
     }
 
-    // 处理分组标题点击（排除内部按钮）
     function handleGroupClick(event, el) {
         if (event.target.classList.contains('btn-text')) return;
         toggleGroup(el);
@@ -647,40 +718,21 @@
     function toggleGroup(el, forceState) {
         const container = el.nextElementSibling;
         const arrow = el.querySelector('.arrow');
-        if (forceState === true) {
-            container.classList.remove('hidden');
-            el.classList.remove('collapsed');
-            arrow.textContent = '▼';
-        } else if (forceState === false) {
-            container.classList.add('hidden');
-            el.classList.add('collapsed');
-            arrow.textContent = '◀';
-        } else {
-            const isHidden = container.classList.contains('hidden');
-            if (isHidden) {
-                container.classList.remove('hidden');
-                el.classList.remove('collapsed');
-                arrow.textContent = '▼';
-            } else {
-                container.classList.add('hidden');
-                el.classList.add('collapsed');
-                arrow.textContent = '◀';
-            }
-        }
+        const isHidden = forceState === undefined ? !container.classList.contains('hidden') : !forceState;
+        container.classList.toggle('hidden', isHidden);
+        el.classList.toggle('collapsed', isHidden);
+        arrow.textContent = isHidden ? '◀' : '▼';
     }
 
-    // 类别全选/取消功能
     function selectGroup(event, el, isAll) {
-        event.stopPropagation(); // 阻止触发折叠
+        event.stopPropagation();
         const group = el.closest('.checklist-group');
         const checkboxes = group.querySelectorAll('input[type="checkbox"]');
         checkboxes.forEach(cb => {
             cb.checked = isAll;
-            // 如果是选中，同时取消可能存在的红色警告
-            if (isAll) {
-                cb.parentElement.classList.remove('missing-essential');
-            }
+            if (isAll) cb.parentElement.classList.remove('missing-essential');
         });
+        saveData();
     }
 
     function toggleAll(expand) {
@@ -707,9 +759,19 @@
 
         if (count > 0) {
             essentialModule.scrollIntoView({ behavior: 'smooth' });
-            setTimeout(() => { alert('提醒：还有 ' + count + ' 项必备物品未准备（已自动展开并标红）'); }, 500);
+            setTimeout(() => { alert('提醒：还有 ' + count + ' 项必备物品未准备'); }, 500);
         } else {
             alert('太棒了！所有必备物品已就绪。');
+        }
+    }
+
+    function resetAll() {
+        if(confirm('确定要重置所有选择吗？这将清空已勾选的项目并恢复默认显示。')) {
+            document.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);
+            document.querySelectorAll('.item-box').forEach(box => box.classList.remove('missing-essential'));
+            toggleAll(true);
+            localStorage.removeItem('travel_checklist_data');
+            // 提示已移除，根据要求直接完成
         }
     }
 </script>
