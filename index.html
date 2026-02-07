@@ -303,6 +303,42 @@
 
         .arrow { transition: transform 0.3s; font-size: 0.7rem; }
         .collapsed .arrow { transform: rotate(-90deg); }
+
+        /* 语音处理记录层 - 类似直播弹幕 */
+        #voice-record-layer {
+            position: fixed;
+            bottom: 160px; /* 位于语音球上方 */
+            right: 20px;
+            width: 200px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            pointer-events: none; /* 不挡点击 */
+            z-index: 1002;
+        }
+
+        .record-item {
+            background: rgba(0, 0, 0, 0.6);
+            color: #fff;
+            padding: 8px 12px;
+            border-radius: 10px;
+            font-size: 0.8rem;
+            backdrop-filter: blur(4px);
+            animation: slideInUp 0.3s ease-out;
+            max-width: 100%;
+            word-break: break-all;
+        }
+
+        @keyframes slideInUp {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* 按钮变色逻辑 */
+        .ai-active {
+            background: #ff4757 !important; /* 开启时变红/橙 */
+            box-shadow: 0 0 20px rgba(255, 71, 87, 0.6) !important;
+        }
     </style>
 </head>
 <body>
@@ -619,7 +655,10 @@
         </div>
     </div>
 </div>
-
+<div id="ai-assistant" onclick="toggleVoiceAssistant()" 
+     style="position: fixed; bottom: 100px; right: 20px; width: 60px; height: 60px; border-radius: 50%; background: var(--primary); color: white; display: flex; align-items: center; justify-content: center; box-shadow: var(--shadow); z-index: 1000; cursor: pointer;">
+    <span id="ai-icon" style="font-size: 24px;">🎙️</span>
+</div>
 <div class="action-bar">
     <button class="btn btn-secondary" onclick="toggleAll(false)">收起</button>
     <button class="btn btn-alert" onclick="remindEssentials()">物品提醒</button>
@@ -773,6 +812,140 @@
             localStorage.removeItem('travel_checklist_data');
             // 提示已移除，根据要求直接完成
         }
+    }
+
+    let isListening = false;
+    let recognition;
+    let recordQueue = []; // 记录队列
+
+    // 初始化识别引擎
+    if ('webkitSpeechRecognition' in window) {
+        recognition = new webkitSpeechRecognition();
+        recognition.continuous = true;    // 连续监听
+        recognition.interimResults = true; // 开启实时(临时)结果
+        recognition.lang = 'zh-CN';
+
+        recognition.onresult = (event) => {
+            // 只要用户说话，立即打断当前的播报
+            if (window.speechSynthesis.speaking) {
+                window.speechSynthesis.cancel();
+            }
+
+            let interimTranscript = '';
+            for (let i = event.resultIndex; i < event.results.length; ++i) {
+                let transcript = event.results[i][0].transcript;
+                if (event.results[i].isFinal) {
+                    // 最终确定句：处理结束指令或结算
+                    handleFinalCommand(transcript);
+                } else {
+                    // 实时临时句：实时勾选物品
+                    handleInterimMatch(transcript);
+                }
+            }
+        };
+
+        recognition.onend = () => { if (isListening) recognition.start(); };
+    }
+
+    // 1. 实时处理：流式匹配物品名
+    function handleInterimMatch(text) {
+        const items = document.querySelectorAll('.item-box');
+        items.forEach(item => {
+            const name = item.innerText.trim();
+            // 只要临时文字包含物品名且未勾选，立即勾选
+            if (text.includes(name)) {
+                const cb = item.querySelector('input');
+                if (!cb.checked) {
+                    cb.checked = true;
+                    item.classList.remove('missing-essential');
+                    addRecord(`已勾选: ${name}`); // 场景3：显示记录
+                    saveData();
+                }
+            }
+        });
+    }
+
+    // 2. 结束处理：指令识别
+    function handleFinalCommand(cmd) {
+        console.log("最终识别:", cmd);
+        if (cmd.includes("结束") || cmd.includes("收拾好了") || cmd.includes("弄好了")) {
+            toggleVoiceAssistant(); // 关闭监听
+            checkAndReport();       // 场景4：汇总播报
+        }
+    }
+
+    // 3. 记录层逻辑：类似直播弹幕（最多3条）
+    function addRecord(msg) {
+        const layer = document.getElementById('voice-record-layer') || createRecordLayer();
+        const item = document.createElement('div');
+        item.className = 'record-item';
+        item.innerText = msg;
+        
+        layer.appendChild(item);
+        recordQueue.push(item);
+
+        if (recordQueue.length > 3) {
+            const oldItem = recordQueue.shift();
+            oldItem.style.opacity = '0';
+            setTimeout(() => oldItem.remove(), 300);
+        }
+    }
+
+    function createRecordLayer() {
+        const div = document.createElement('div');
+        div.id = 'voice-record-layer';
+        document.body.appendChild(div);
+        return div;
+    }
+
+    // 4. 按钮变色与状态切换
+    function toggleVoiceAssistant() {
+        const btn = document.getElementById('ai-assistant');
+        const icon = document.getElementById('ai-icon');
+
+        if (isListening) {
+            isListening = false;
+            recognition.stop();
+            btn.classList.remove('ai-active', 'ai-pulse');
+            icon.textContent = "🎙️";
+            addRecord("停止监听");
+        } else {
+            isListening = true;
+            recognition.start();
+            btn.classList.add('ai-active', 'ai-pulse'); // 按钮变色
+            icon.textContent = "🛑";
+            addRecord("开启监听中...");
+            if (!window.speechSynthesis.speaking) speak("进入整理模式");
+        }
+    }
+
+    // 播报并支持后续逻辑
+    function checkAndReport() {
+            let missing = [];
+            document.querySelectorAll('.item-box.essential').forEach(item => {
+                if (!item.querySelector('input').checked) {
+                    missing.push(item.innerText.trim());
+                }
+            });
+
+            const totalMissing = missing.length;
+            let msg = "";
+
+            if (totalMissing > 0) {
+                // 获取前三个物品
+                const topThree = missing.slice(0, 3).join('、');
+                msg = `整理结束。还缺：${topThree}等共${totalMissing}件物品。您可以继续整理。`;
+            } else {
+                msg = "太棒了，全部带齐了！";
+            }
+
+            speak(msg);
+        }
+
+    function speak(text) {
+        const speech = new SpeechSynthesisUtterance(text);
+        speech.lang = 'zh-CN';
+        window.speechSynthesis.speak(speech);
     }
 </script>
 
