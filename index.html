@@ -317,18 +317,6 @@
             z-index: 1002;
         }
 
-        .record-item {
-            background: rgba(0, 0, 0, 0.6);
-            color: #fff;
-            padding: 8px 12px;
-            border-radius: 10px;
-            font-size: 0.8rem;
-            backdrop-filter: blur(4px);
-            animation: slideInUp 0.3s ease-out;
-            max-width: 100%;
-            word-break: break-all;
-        }
-
         @keyframes slideInUp {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
@@ -339,6 +327,31 @@
             background: #ff4757 !important; /* 开启时变红/橙 */
             box-shadow: 0 0 20px rgba(255, 71, 87, 0.6) !important;
         }
+
+        /* 记录项样式调整：增加透明度 */
+        .record-item {
+            background: rgba(0, 0, 0, 0.5); /* 降低不透明度 */
+            color: #fff;
+            padding: 8px 30px 8px 12px; /* 右侧留出关闭按钮空间 */
+            border-radius: 8px;
+            font-size: 0.8rem;
+            backdrop-filter: blur(4px);
+            position: relative;
+            pointer-events: auto; /* 允许点击关闭按钮 */
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        /* 日志关闭按钮 */
+        .record-close {
+            position: absolute;
+            right: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            font-size: 14px;
+            opacity: 0.7;
+        }
+        .record-close:hover { opacity: 1; }
     </style>
 </head>
 <body>
@@ -480,7 +493,7 @@
                 </div>
                 <div class="items-container">
                     <label class="item-box essential">身份证 <input type="checkbox" data-id="e1"></label>
-                    <label class="item-box essential">护照(有效期>6个月)<input type="checkbox" data-id="e2"></label>
+                    <label class="item-box essential">护照<input type="checkbox" data-id="e2"></label>
                     <label class="item-box essential">泰铢现金 <input type="checkbox" data-id="e3"></label>
                     <label class="item-box essential">泰国电话卡 <input type="checkbox" data-id="e4"></label>
                     <label class="item-box essential">卡针/卡包<input type="checkbox" data-id="e5"></label>
@@ -524,7 +537,8 @@
                 </div>
                 <div class="items-container">
                     <label class="item-box essential">定位器/电子表 <input type="checkbox" data-id="e21"></label>
-                    <label class="item-box essential">手机/充电器 <input type="checkbox" data-id="e22"></label>
+                    <label class="item-box essential">手机 <input type="checkbox" data-id="e22"></label>
+                    <label class="item-box essential">充电器 <input type="checkbox" data-id="e22"></label>
                     <label class="item-box essential">充电宝 <input type="checkbox" data-id="e23"></label>
                     <label class="item-box essential">耳机 <input type="checkbox" data-id="e24"></label>
                     <label class="item-box essential">小音响 <input type="checkbox" data-id="e25"></label>
@@ -641,7 +655,8 @@
                     <label class="item-box">眼罩 <input type="checkbox" data-id="o9"></label>
                     <label class="item-box">压缩浴巾 <input type="checkbox" data-id="o10"></label>
                     <label class="item-box">睡衣裤 <input type="checkbox" data-id="o11"></label>
-                    <label class="item-box">泳帽+泳镜 <input type="checkbox" data-id="o12"></label>
+                    <label class="item-box">泳帽 <input type="checkbox" data-id="o12"></label>
+                    <label class="item-box">泳镜 <input type="checkbox" data-id="o12"></label>
                     <label class="item-box">雨伞 <input type="checkbox" data-id="o13"></label>
                     <label class="item-box">沙滩鞋 <input type="checkbox" data-id="o14"></label>
                     <label class="item-box">备用眼镜 <input type="checkbox" data-id="o15"></label>
@@ -816,7 +831,6 @@
 
     let isListening = false;
     let recognition;
-    let recordQueue = []; // 记录队列
 
     // 初始化识别引擎
     if ('webkitSpeechRecognition' in window) {
@@ -847,47 +861,12 @@
         recognition.onend = () => { if (isListening) recognition.start(); };
     }
 
-    // 1. 实时处理：流式匹配物品名
-    function handleInterimMatch(text) {
-        const items = document.querySelectorAll('.item-box');
-        items.forEach(item => {
-            const name = item.innerText.trim();
-            // 只要临时文字包含物品名且未勾选，立即勾选
-            if (text.includes(name)) {
-                const cb = item.querySelector('input');
-                if (!cb.checked) {
-                    cb.checked = true;
-                    item.classList.remove('missing-essential');
-                    addRecord(`已勾选: ${name}`); // 场景3：显示记录
-                    saveData();
-                }
-            }
-        });
-    }
-
     // 2. 结束处理：指令识别
     function handleFinalCommand(cmd) {
         console.log("最终识别:", cmd);
         if (cmd.includes("结束") || cmd.includes("收拾好了") || cmd.includes("弄好了")) {
             toggleVoiceAssistant(); // 关闭监听
             checkAndReport();       // 场景4：汇总播报
-        }
-    }
-
-    // 3. 记录层逻辑：类似直播弹幕（最多3条）
-    function addRecord(msg) {
-        const layer = document.getElementById('voice-record-layer') || createRecordLayer();
-        const item = document.createElement('div');
-        item.className = 'record-item';
-        item.innerText = msg;
-        
-        layer.appendChild(item);
-        recordQueue.push(item);
-
-        if (recordQueue.length > 3) {
-            const oldItem = recordQueue.shift();
-            oldItem.style.opacity = '0';
-            setTimeout(() => oldItem.remove(), 300);
         }
     }
 
@@ -942,9 +921,106 @@
             speak(msg);
         }
 
+        // 1. 语音 JSON 补丁 (映射口语到清单关键词)
+    const voicePatch = {
+        "泰铢": "泰铢现金",
+        "电话卡": "泰国电话卡",
+        "卡针": "卡针/卡包",
+        "卡包": "卡针/卡包",
+        "机票": "机票行程单",
+        "酒店": "酒店确认单",
+        "保险": "旅游保险单",
+        "入境卡": "电子入境单",
+        "入境申请": "电子入境单",
+        "防水袋": "手机防水袋",
+        "纸": "纸巾",
+        "地图": "谷歌地图",
+        "打车": "Grab打车",
+        "短袖": "短袖*4",
+        "翻译": "谷歌翻译",
+        "定位器": "定位器/电子表",
+        "电子表": "定位器/电子表",
+        "电子手表": "定位器/电子表"
+    };
+
+    // 2. 实时匹配引擎 (包含 JSON 补丁 + indexOf 模糊匹配)
+    function handleInterimMatch(text) {
+        const items = document.querySelectorAll('.item-box');
+        
+        // 先检查是否命中了 JSON 补丁中的映射
+        let targetWords = [];
+        for (let key in voicePatch) {
+            if (text.indexOf(key) !== -1) {
+                targetWords.push(voicePatch[key]);
+            }
+        }
+
+        items.forEach(item => {
+            const itemName = item.innerText.trim();
+            const cb = item.querySelector('input');
+            if (cb.checked) return; // 已勾选的跳过
+
+            // 匹配逻辑：
+            // A. 补丁命中了该选项名 
+            // B. 或者选项名直接被包含在语音文本中 (indexOf)
+            let isMatched = targetWords.some(w => itemName.indexOf(w) !== -1) || 
+                            text.indexOf(itemName) !== -1;
+
+            if (isMatched) {
+                cb.checked = true;
+                item.classList.remove('missing-essential');
+                
+                // 3. 新增勾选后的语音实时反馈
+                speak(`已勾选：${itemName.split('(')[0]}`); 
+                
+                // 4. 显示日志
+                addRecord(`勾选: ${itemName.split('(')[0]}`);
+                saveData();
+            }
+        });
+    }
+
+    // 5. 日志管理逻辑 (数量缩减到2个 + 右上角关闭)
+    let recordQueue = []; 
+    function addRecord(msg) {
+        const layer = document.getElementById('voice-record-layer') || createRecordLayer();
+        const item = document.createElement('div');
+        item.className = 'record-item';
+        
+        // 增加文本和关闭按钮
+        item.innerHTML = `
+            <span>${msg}</span>
+            <span class="record-close" onclick="removeThisRecord(this)">×</span>
+        `;
+        
+        layer.appendChild(item);
+        recordQueue.push(item);
+
+        // 限制显示数量为 2 个
+        if (recordQueue.length > 2) {
+            const oldItem = recordQueue.shift();
+            oldItem.style.opacity = '0';
+            setTimeout(() => oldItem.remove(), 300);
+        }
+    }
+
+    // 关闭单个日志的函数
+    function removeThisRecord(btn) {
+        const item = btn.parentElement;
+        item.style.opacity = '0';
+        setTimeout(() => {
+            item.remove();
+            recordQueue = recordQueue.filter(r => r !== item);
+        }, 300);
+    }
+
+    // 语音播报函数 (复用)
     function speak(text) {
+        // 如果已经在播报，先停止前一个（防止排队太长）
+        window.speechSynthesis.cancel(); 
         const speech = new SpeechSynthesisUtterance(text);
         speech.lang = 'zh-CN';
+        speech.rate = 1.1; // 稍微加快一点语速，反馈更干脆
         window.speechSynthesis.speak(speech);
     }
 </script>
